@@ -171,7 +171,26 @@ app.get("/api/movies/:id", async (req: Request, res: Response) => {
 // - Handles errors appropriately
 // ============================================================================
 
-// YOUR CODE HERE
+app.post("/api/movies", async (req: Request, res: Response) => {
+    try {
+        const movie: Movie = req.body;
+
+        const result = await moviesCollection.insertOne(movie);
+
+        if (result.insertedId) {
+            res.status(201).json({
+                message: "Movie Created",
+                insertedId: result.insertedId,
+            });
+
+        }   else {
+            res.status(500).json({ message: "Failed to insert movie" });
+            }
+        } catch (error: any) {
+            res.status(500).json({ message: error.message });
+        }
+    
+});
 
 
 // ============================================================================
@@ -184,7 +203,25 @@ app.get("/api/movies/:id", async (req: Request, res: Response) => {
 // - Handles errors with try-catch
 // ============================================================================
 
-// YOUR CODE HERE
+app.put("/api/movies/:id", async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        const updateData = req.body;
+
+        const result = await moviesCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updateData }
+        );
+
+        if (result.modifedCount == 0) {
+            return res.status(404).json({ message: "Movie not found or not updated yet" });
+        }
+
+        res.status(200).json({ message: "Movie Updated Sucessfully" });
+    }   catch (error: any) {
+        res.status(500).json9({ message: error.message });
+    }
+});
 
 
 // ============================================================================
