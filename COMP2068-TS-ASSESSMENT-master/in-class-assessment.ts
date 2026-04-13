@@ -44,7 +44,9 @@
 // MongoClient, Db, Collection, ObjectId), and dotenv
 // ============================================================================
 
-// YOUR CODE HERE
+import express, { Request, Response } from "express";
+import { MongoClient, Db, Collection, ObjectId } from "mongodb";
+import dotenv from "dotnev";
 
 
 // ============================================================================
@@ -57,7 +59,13 @@
 // - rating (number)
 // ============================================================================
 
-// YOUR CODE HERE
+interface Movie {
+    _id: ObjectId;
+    title: string;
+    director: string;
+    year: number;
+    rating: number;
+}
 
 
 // ============================================================================
@@ -68,7 +76,12 @@
 // - Add express.json() middleware to parse JSON bodies
 // ============================================================================
 
-// YOUR CODE HERE
+dotenv.config();
+
+const app = express();
+const port = 5000;
+
+app.use(express.json());
 
 
 // ============================================================================
@@ -81,7 +94,27 @@
 // - Console.logs a success message with database and collection names
 // ============================================================================
 
-// YOUR CODE HERE
+async function connectToDatabase(): Promise<Collection<Movie>> {
+    const connString = process.env.DB_CONN_STRING;
+    const dbName = process.env.DB_NAME;
+    const collectionName = process.env.COLLECTION_NAME; 
+
+    if (!connString || !dbnName || !collectionName) {
+        throw new Error("Missing environment variables");
+    }
+
+    const client = new MongoClient(connString);
+    await client.connect();
+
+    const db: Db = client.db(dbName);
+    const collection: Collection<Movie> = db.collection(collectionName);
+
+    console.log('Connected to DB: ${dbName}, Collection: ${collectionName}');
+
+    return collection;
+}
+
+let moviesCollection: Collection<Movie>;
 
 
 // ============================================================================
