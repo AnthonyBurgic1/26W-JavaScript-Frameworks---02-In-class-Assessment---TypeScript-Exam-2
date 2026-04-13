@@ -262,7 +262,18 @@ app.delete("/api/movies/:id", async (req: Request, res: Response) => {
 // - Catch any database errors, log them, and exit process
 // ============================================================================
 
-// YOUR CODE HERE
+connectToDatabase()
+.then((collection) => {
+    moviesCollection = collection;
+
+    app.listen(port, () => {
+        console.log('Server running at http://localhost:${port}');
+    });
+})
+.catch((error) => {
+    console.error("Database connection failed:", error);
+    ProcessingInstruction.exit(1);
+});
 
 
 // ============================================================================
