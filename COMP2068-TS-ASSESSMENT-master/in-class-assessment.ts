@@ -125,7 +125,14 @@ let moviesCollection: Collection<Movie>;
 // - Handles errors with try-catch and returns status 500 with error message
 // ============================================================================
 
-// YOUR CODE HERE
+app.get("/api/movies", async (req: Request, res: Response) => {
+    try {
+        const movies = await moviesCollection.find({}).toArray();
+        res.status(200).json(movies);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 
 // ============================================================================
